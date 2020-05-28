@@ -28,6 +28,7 @@ jobs:
         path: bin/
 
   test-netfx-win:
+    needs: build
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
@@ -47,6 +48,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest, windows-latest]
+    needs: build
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v2
