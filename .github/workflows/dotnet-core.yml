@@ -27,7 +27,24 @@ jobs:
   #       name: build
   #       path: bin/
 
-  test:
+  test-netfx-win:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Test
+      run: dotnet test --framework net471 --configuration Release
+    #   - name: Download build artifacts
+    #     uses: actions/download-artifact@v1
+    #     with:
+    #       name: build
+    #   - name: Test
+    #     run: dotnet test --no-restore --configuration Release
+
+  test-netcore:
     strategy:
       matrix:
         platform: [ubuntu-latest, windows-latest]
@@ -39,10 +56,4 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Test
-      run: dotnet test --configuration Release
-    #   - name: Download build artifacts
-    #     uses: actions/download-artifact@v1
-    #     with:
-    #       name: build
-    #   - name: Test
-    #     run: dotnet test --no-restore --configuration Release
+      run: dotnet test --framework netcoreapp3.1 --configuration Release
