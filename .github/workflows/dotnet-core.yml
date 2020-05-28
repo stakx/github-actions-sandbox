@@ -7,25 +7,25 @@ on:
     branches: [ master ]
 
 jobs:
-  # build:
+  build:
 
-  #   runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Setup .NET Core
-  #     uses: actions/setup-dotnet@v1
-  #     with:
-  #       dotnet-version: 3.1.101
-  #   - name: Install dependencies
-  #     run: dotnet restore
-  #   - name: Build
-  #     run: dotnet build --configuration Release --no-restore
-  #   - name: Upload build artifacts
-  #     uses: actions/upload-artifact@v1
-  #     with:
-  #       name: build
-  #       path: bin/
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Cache build
+      uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: bin/
 
   test-netfx-win:
     runs-on: windows-latest
@@ -35,14 +35,13 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+    - name: Restore build
+      uses: actions/download-artifact@v2
+      with:
+        name: build
+        path: bin/
     - name: Test
-      run: dotnet test --framework net471 --configuration Release
-    #   - name: Download build artifacts
-    #     uses: actions/download-artifact@v1
-    #     with:
-    #       name: build
-    #   - name: Test
-    #     run: dotnet test --no-restore --configuration Release
+      run: dotnet test --framework net471 --configuration Release --no-build
 
   test-netcore:
     strategy:
@@ -55,5 +54,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+    - name: Restore build
+      uses: actions/download-artifact@v2
+      with:
+        name: build
+        path: bin/
     - name: Test
-      run: dotnet test --framework netcoreapp3.1 --configuration Release
+      run: dotnet test --framework netcoreapp3.1 --configuration Release --no-build
