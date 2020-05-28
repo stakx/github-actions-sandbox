@@ -25,7 +25,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: build
-        path: bin/
+        path: Sandbox.Tests/bin/
 
   test-netfx-win:
     needs: build
@@ -40,7 +40,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: build
-        path: bin/
+        path: Sandbox.Tests/bin/
     - name: Test
       run: dotnet test --framework net471 --configuration Release --no-build
 
